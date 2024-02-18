@@ -1,20 +1,22 @@
-import { Component, computed, signal } from '@angular/core';
+import { Component, ElementRef, ViewChild, computed, effect, inject, signal, viewChild } from '@angular/core';
 import {
   CdkDragDrop,
   CdkDrag,
   CdkDropList,
   CdkDropListGroup,
   moveItemInArray,
-  transferArrayItem,
 } from '@angular/cdk/drag-drop';
-import { Card, Points, Rank } from 'src/cards';
+import { Card, Rank, Suit } from 'src/cards';
+import { SetHandService } from './set-hand.service';
+import { MatButtonToggleGroup, MatButtonToggleModule } from '@angular/material/button-toggle'
+import { JsonPipe } from '@angular/common';
 
 @Component({
   selector: 'cdk-drag-drop-connected-sorting-group-example',
   templateUrl: 'cdk-drag-drop-connected-sorting-group-example.html',
-  styleUrls: ['cdk-drag-drop-connected-sorting-group-example.css'],
+  styleUrls: ['cdk-drag-drop-connected-sorting-group-example.scss'],
   standalone: true,
-  imports: [CdkDropListGroup, CdkDropList, CdkDrag],
+  imports: [CdkDropListGroup, CdkDropList, CdkDrag, MatButtonToggleModule, JsonPipe],
 })
 export class CdkDragDropConnectedSortingGroupExample {
   c1 = signal<Card | undefined>(undefined);
@@ -23,6 +25,39 @@ export class CdkDragDropConnectedSortingGroupExample {
   c4 = signal<Card | undefined>(undefined);
   c5 = signal<Card | undefined>(undefined);
 
+  @ViewChild('hearts')
+  heartsElOld!: MatButtonToggleGroup;
+
+  heartsEl = viewChild.required<MatButtonToggleGroup>('hearts');
+
+  constructor() {
+    effect(() => 
+      console.log(this.heartsEl())
+    )
+  }
+
+  log() {
+    console.log(this.heartsEl().value)
+    console.log(this.heartsElOld.value)
+  }
+
+  ranks: Rank[] = ['ace'
+    , 'two'
+    , 'three'
+    , 'four'
+    , 'five'
+    , 'six'
+    , 'seven'
+    , 'eight'
+    , 'nine'
+    , 'ten'
+    , 'jack'
+    , 'queen'
+    , 'king'
+  ]
+
+  suits: Suit[] = ['club', 'diamond', 'heart', 'spade']
+
   hand = computed(() => [
     this.c1(),
     this.c2(),
@@ -30,6 +65,8 @@ export class CdkDragDropConnectedSortingGroupExample {
     this.c4(),
     this.c5(),
   ]);
+
+  public setHandService = inject(SetHandService);
 
   drawPile = signal<Card[]>([]);
 
@@ -58,41 +95,6 @@ export class CdkDragDropConnectedSortingGroupExample {
     }
   }
 
-  setFlush() {
-    this.hand().forEach((card, i) => {
-      switch (i) {
-        case 0:
-          this.c1.set({ rank: 'two', points: 2, suit: 'diamond' });
-          break;
-        case 1:
-          this.c2.set({ rank: 'three', points: 3, suit: 'diamond' });
-          break;
-        case 2:
-          this.c3.set({ rank: 'four', points: 4, suit: 'diamond' });
-          break;
-        case 3:
-          this.c4.set({ rank: 'five', points: 5, suit: 'diamond' });
-          break;
-        case 4:
-          this.c5.set({ rank: 'six', points: 6, suit: 'diamond' });
-          break;
-      }
-    });
-  }
-
-  setPair() {
-    this.hand().forEach((card, i) => {
-      switch (i) {
-        case 0:
-          this.c1.set({ rank: 'two', points: 2, suit: 'diamond' });
-          break;
-        case 1:
-          this.c2.set({ rank: 'two', points: 2, suit: 'club' });
-          break;
-      }
-    });
-  }
-
   isFlush = computed(() => {
     let suits: (Card['suit'] | undefined)[] = [];
     this.hand().forEach((card) =>
@@ -101,8 +103,6 @@ export class CdkDragDropConnectedSortingGroupExample {
     const uniqueSuits = [...new Set(suits)].filter(
       (suit) => suit !== undefined
     );
-
-    console.log();
 
     return (
       uniqueSuits.length === 1 &&

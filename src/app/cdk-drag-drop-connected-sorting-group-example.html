@@ -1,0 +1,51 @@
+<pre>handHasCard: {{handHasCard()}}</pre>
+<pre>isFlush: {{isFlush()}}</pre>
+<pre>has pair: {{hasPair()}}</pre>
+<button (click)="setHandService.setFlush(hand,c1,c2,c3,c4,c5)">set flush</button>
+<button (click)="setHandService.setPair(hand,c1,c2)">set pair</button>
+<div>
+  <button (click)="addCard('c1')">c1</button>
+  <button (click)="addCard('c2')">c2</button>
+  <button (click)="addCard('c3')">c3</button>
+  <button (click)="addCard('c4')">c4</button>
+  <button (click)="addCard('c5')">c5</button>
+</div>
+
+<div cdkDropList cdkDropListOrientation="horizontal" class="list" (cdkDropListDropped)="drop($event)">
+  @for (card of hand(); track card) {
+  @if(card) {
+  <div class="card" [class]="card.suit" cdkDrag>{{card.rank}}</div>
+  }
+  }
+</div>
+
+<p (click)="log()">
+  <mat-button-toggle-group name="fontStyle" aria-label="Font Style" #hearts="matButtonToggleGroup">
+      @for(rank of ranks; track $index) {
+        <mat-button-toggle [value]="rank + '.' + suits[2]" class="heart">{{rank}} </mat-button-toggle>
+      }
+  </mat-button-toggle-group>{{heartsEl()?.value}}
+</p>
+
+<p>
+  <mat-button-toggle-group name="fontStyle" aria-label="Font Style">
+      @for(rank of ranks; track $index) {
+        <mat-button-toggle [value]="rank" class="club">{{rank}}</mat-button-toggle>
+      }
+  </mat-button-toggle-group>
+</p>
+<p>
+  <mat-button-toggle-group name="fontStyle" aria-label="Font Style">
+      @for(rank of ranks; track $index) {
+        <mat-button-toggle [value]="rank" class="diamond">{{rank}}</mat-button-toggle>
+      }
+  </mat-button-toggle-group>
+</p>
+<p>
+  <mat-button-toggle-group name="fontStyle" aria-label="Font Style">
+      @for(rank of ranks; track $index) {
+        <mat-button-toggle [value]="rank" class="spade">{{rank}}</mat-button-toggle>
+      }
+  </mat-button-toggle-group>
+</p>
+
