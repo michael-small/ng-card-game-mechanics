@@ -1,0 +1,27 @@
+<pre>handHasCard: {{handHasCard()}}</pre>
+<pre>isFlush: {{isFlush()}}</pre>
+<pre>has pair: {{hasPair()}}</pre>
+<button (click)="setFlush()">set flush</button>
+<button (click)="setPair()">set pair</button>
+<div>
+  <button (click)="addCard('c1')">c1</button>
+  <button (click)="addCard('c2')">c2</button>
+  <button (click)="addCard('c3')">c3</button>
+  <button (click)="addCard('c4')">c4</button>
+  <button (click)="addCard('c5')">c5</button>
+</div>
+
+<div
+  cdkDropList
+  cdkDropListOrientation="horizontal"
+  class="list"
+  (cdkDropListDropped)="drop($event)"
+>
+  @for (card of hand(); track card) { @if(card) {
+  <div class="card" [class]="card.suit" cdkDrag>{{card.rank}}</div>
+  } }
+</div>
+
+<!-- Copyright 2024 Google LLC. All Rights Reserved.
+    Use of this source code is governed by an MIT-style license that
+    can be found in the LICENSE file at https://angular.io/license -->
