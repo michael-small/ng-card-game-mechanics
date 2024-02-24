@@ -6,7 +6,7 @@ import {
   CdkDropListGroup,
   moveItemInArray,
 } from '@angular/cdk/drag-drop';
-import { Card, Rank, Suit } from 'src/cards';
+import { Card, Cards, Rank, Suit } from 'src/cards';
 import { SetHandService } from './set-hand.service';
 import { MatButtonToggleGroup, MatButtonToggleModule } from '@angular/material/button-toggle'
 import { JsonPipe } from '@angular/common';
@@ -78,19 +78,19 @@ export class CdkDragDropConnectedSortingGroupExample {
   addCard(card: 'c1' | 'c2' | 'c3' | 'c4' | 'c5') {
     switch (card) {
       case 'c1':
-        this.c1.set({ rank: 'two', points: 2, suit: 'diamond' });
+        this.c1.set(Cards.DiamondTwo);
         break;
       case 'c2':
-        this.c2.set({ rank: 'three', points: 3, suit: 'heart' });
+        this.c2.set(Cards.HeartsThree);
         break;
       case 'c3':
-        this.c3.set({ rank: 'four', points: 4, suit: 'spade' });
+        this.c3.set(Cards.SpadesFour);
         break;
       case 'c4':
-        this.c4.set({ rank: 'five', points: 5, suit: 'club' });
+        this.c4.set(Cards.ClubFive);
         break;
       case 'c5':
-        this.c5.set({ rank: 'six', points: 6, suit: 'diamond' });
+        this.c5.set(Cards.DiamondSix);
         break;
     }
   }
