@@ -9,14 +9,14 @@ import {
 import { Card, Cards, Rank, Suit } from 'src/cards';
 import { SetHandService } from './set-hand.service';
 import { MatButtonToggleGroup, MatButtonToggleModule } from '@angular/material/button-toggle'
-import { JsonPipe } from '@angular/common';
+import { JsonPipe, UpperCasePipe } from '@angular/common';
 
 @Component({
   selector: 'cdk-drag-drop-connected-sorting-group-example',
   templateUrl: 'cdk-drag-drop-connected-sorting-group-example.html',
   styleUrls: ['cdk-drag-drop-connected-sorting-group-example.scss'],
   standalone: true,
-  imports: [CdkDropListGroup, CdkDropList, CdkDrag, MatButtonToggleModule, JsonPipe],
+  imports: [CdkDropListGroup, CdkDropList, CdkDrag, MatButtonToggleModule, JsonPipe, UpperCasePipe],
 })
 export class CdkDragDropConnectedSortingGroupExample {
   c1 = signal<Card | undefined>(undefined);

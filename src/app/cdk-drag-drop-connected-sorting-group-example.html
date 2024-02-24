@@ -14,7 +14,23 @@
 <div cdkDropList cdkDropListOrientation="horizontal" class="list" (cdkDropListDropped)="drop($event)">
   @for (card of hand(); track card) {
   @if(card) {
-  <div class="card" [class]="card.suit" cdkDrag>{{card.rank}}</div>
+  <div class="card" [class]="card.suit" cdkDrag>
+    <h1>{{card.rank | uppercase}}</h1>
+    <h2 class="suit-emoji">
+      @switch(card.suit) {
+        @case('diamond') {
+          <span class="diamond-icon">♦️</span>
+        } @case ('spade') {
+          <span class="spade-icon">♠️</span>
+        } @case ('club') {
+          <span class="club-icon">♣️</span>
+        } @case ('heart') {
+          <span class="heart-icon">♥️</span>
+        }
+            
+      }
+    </h2>
+  </div>
   }
   }
 </div>
