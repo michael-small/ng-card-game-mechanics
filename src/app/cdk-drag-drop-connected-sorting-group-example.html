@@ -35,13 +35,11 @@
   }
 </div>
 
-<p (click)="log()">
   <mat-button-toggle-group name="fontStyle" aria-label="Font Style" #hearts="matButtonToggleGroup">
       @for(rank of ranks; track $index) {
-        <mat-button-toggle [value]="rank + '.' + suits[2]" class="heart">{{rank}} </mat-button-toggle>
+        <mat-button-toggle [value]="rank + '.' + suits[2]" class="heart" (click)="log('heart', rank)">{{rank}}</mat-button-toggle>
       }
-  </mat-button-toggle-group>{{heartsEl()?.value}}
-</p>
+  </mat-button-toggle-group>
 
 <p>
   <mat-button-toggle-group name="fontStyle" aria-label="Font Style">

@@ -10,6 +10,7 @@ import { Card, Cards, Rank, Suit } from 'src/cards';
 import { SetHandService } from './set-hand.service';
 import { MatButtonToggleGroup, MatButtonToggleModule } from '@angular/material/button-toggle'
 import { JsonPipe, UpperCasePipe } from '@angular/common';
+import { handHasCard, hasPair, isFlush } from './hand-states';
 
 @Component({
   selector: 'cdk-drag-drop-connected-sorting-group-example',
@@ -25,10 +26,11 @@ export class CdkDragDropConnectedSortingGroupExample {
   c4 = signal<Card | undefined>(undefined);
   c5 = signal<Card | undefined>(undefined);
 
-  @ViewChild('hearts')
-  heartsElOld!: MatButtonToggleGroup;
-
   heartsEl = viewChild.required<MatButtonToggleGroup>('hearts');
+
+  handHasCard = computed(() => handHasCard(this.hand()));
+  isFlush = computed(() => isFlush(this.hand()));
+  hasPair = computed(() => hasPair(this.hand()))
 
   constructor() {
     effect(() => 
@@ -36,9 +38,10 @@ export class CdkDragDropConnectedSortingGroupExample {
     )
   }
 
-  log() {
+  log(suit: Suit, rank: Rank) {
     console.log(this.heartsEl().value)
-    console.log(this.heartsElOld.value)
+    const selectedCard = Cards.Hearts.find((card) => card.rank === rank && card.suit === 'heart')
+    this.c1.set(selectedCard)
   }
 
   ranks: Rank[] = ['ace'
@@ -70,11 +73,6 @@ export class CdkDragDropConnectedSortingGroupExample {
 
   drawPile = signal<Card[]>([]);
 
-  handHasCard = computed(() => {
-    const cardsDefined = this.hand().map((card) => !!card);
-    return cardsDefined.includes(true);
-  });
-
   addCard(card: 'c1' | 'c2' | 'c3' | 'c4' | 'c5') {
     switch (card) {
       case 'c1':
@@ -94,40 +92,6 @@ export class CdkDragDropConnectedSortingGroupExample {
         break;
     }
   }
-
-  isFlush = computed(() => {
-    let suits: (Card['suit'] | undefined)[] = [];
-    this.hand().forEach((card) =>
-      suits.push(card?.suit ? card.suit : undefined)
-    );
-    const uniqueSuits = [...new Set(suits)].filter(
-      (suit) => suit !== undefined
-    );
-
-    return (
-      uniqueSuits.length === 1 &&
-      this.hand().filter((card): card is Card => !!card).length === 5
-    );
-  });
-
-  hasPair = computed(() => {
-    const numbers = this.hand()
-      .map((card) => card?.rank)
-      .filter((num): num is Rank => num !== undefined);
-    let duplicates: Rank[] = [];
-    for (let i in numbers) {
-      for (let j in numbers) {
-        if (numbers[i] === numbers[j] && i !== j) {
-          // Check if the found duplicate is already in the duplicates numbers
-          if (!duplicates.includes(numbers[i])) {
-            duplicates.push(numbers[i]);
-            break; // To avoid adding the same duplicate multiple times
-          }
-        }
-      }
-    }
-    return duplicates.length > 0;
-  });
 
   drop(event: CdkDragDrop<Card[] | undefined>) {
     moveItemInArray(this.hand(), event.previousIndex, event.currentIndex);
